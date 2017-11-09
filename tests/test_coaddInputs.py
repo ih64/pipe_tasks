@@ -53,6 +53,7 @@ import lsst.afw.cameraGeom.testUtils
 from lsst.afw.coord import Coord, IcrsCoord
 import lsst.afw.geom
 from lsst.afw.geom import degrees
+from lsst.afw.geom.skyWcs import makeCdMatrix, SkyWcs
 from lsst.afw.geom.polygon import Polygon
 import lsst.afw.image
 from lsst.afw.detection import GaussianPsf
@@ -98,10 +99,12 @@ class MockExposure(object):
         exp.setDetector(detector)
 
         expInfo = exp.getInfo()
-        wcs = lsst.afw.image.makeWcs(
-            IcrsCoord(10*lsst.afw.geom.degrees, 45*lsst.afw.geom.degrees),
-            lsst.afw.geom.Point2D(5, 5),
-            5.1e-5, 0, 0, -5.1e-5,  # CD: 11, 12, 21, 22
+        scale = 5.1e-5 * degrees
+        cdMatrix = makeCdMatrix(scale=scale)
+        wcs = SkyWcs(
+            crpix=lsst.afw.geom.Point2D(5, 5),
+            crval=IcrsCoord(10*lsst.afw.geom.degrees, 45*lsst.afw.geom.degrees),
+            cdMatrix=cdMatrix,
         )
         expInfo.setWcs(wcs)
         expInfo.setPsf(GaussianPsf(5, 5, 2.5))
@@ -120,12 +123,13 @@ class MockExposure(object):
 
     @staticmethod
     def makeWcs():
-        wcs = lsst.afw.image.makeWcs(
-            IcrsCoord(10*lsst.afw.geom.degrees, 45*lsst.afw.geom.degrees),
-            lsst.afw.geom.Point2D(5, 5),
-            5.1e-5, 0, 0, -5.1e-5,  # CD: 11, 12, 21, 22
+        scale = 5.1e-5 * degrees
+        cdMatrix = makeCdMatrix(scale=scale)
+        return SkyWcs(
+            crpix = lsst.afw.geom.Point2D(5, 5),
+            crval = IcrsCoord(10*lsst.afw.geom.degrees, 45*lsst.afw.geom.degrees),
+            cdMatrix = cdMatrix,
         )
-        return wcs
 
     @staticmethod
     def makeVisitInfo():

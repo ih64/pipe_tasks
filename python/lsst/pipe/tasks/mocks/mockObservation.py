@@ -27,6 +27,7 @@ import numpy as np
 import lsst.pex.config
 import lsst.afw.table
 import lsst.afw.geom
+from lsst.afw.geom.skyWcs import SkyWcs
 from lsst.afw.cameraGeom import PIXELS, FOCAL_PLANE
 import lsst.afw.image
 import lsst.afw.math
@@ -176,7 +177,7 @@ class MockObservationTask(lsst.pipe.base.Task):
         fpCtr = detector.makeCameraPoint(lsst.afw.geom.Point2D(0, 0), FOCAL_PLANE)
         crpix = detector.transform(fpCtr, PIXELS).getPoint()
 
-        wcs = lsst.afw.image.makeWcs(crval, crpix, *cd.getMatrix().flatten())
+        wcs = SkyWcs(crpix=crpix, crval=crval, cdMatrix=cd.getMatrix())
         return wcs
 
     def buildCalib(self):

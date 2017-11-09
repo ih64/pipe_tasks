@@ -32,6 +32,7 @@ import lsst.afw.image as afwImage
 import lsst.afw.table as afwTable
 import lsst.afw.coord as afwCoord
 import lsst.afw.geom as afwGeom
+from lsst.afw.geom.skyWcs import makeCdMatrix, SkyWcs
 import lsst.afw.display.ds9 as ds9
 from lsst.pipe.base import Struct
 from lsst.pipe.tasks.registerImage import RegisterConfig, RegisterTask
@@ -88,8 +89,8 @@ class RegisterTestCase(unittest.TestCase):
         # Create WCSes
         centerCoord = afwCoord.IcrsCoord(0*afwGeom.degrees, 0*afwGeom.degrees)
         centerPixel = afwGeom.Point2D(self.width/2, self.height/2)
-        wcs = afwImage.makeWcs(centerCoord, centerPixel, self.pixelScale.asDegrees(), 0, 0,
-                               self.pixelScale.asDegrees())
+        cdMatrix = makeCdMatrix(scale=self.pixelScale)
+        wcs = SkyWcs(crpix=centerPixel, crval=centerCoord, cdMatrix=cdMatrix)
 
         # Note that one of the WCSes must be "wrong", since they are the same, but the sources are offset.
         # It is the job of the RegisterTask to align the images, despite the "wrong" WCS.

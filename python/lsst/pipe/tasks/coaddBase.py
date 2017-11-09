@@ -28,6 +28,7 @@ import lsst.afw.image as afwImage
 import lsst.pipe.base as pipeBase
 import lsst.meas.algorithms as measAlg
 
+from lsst.afw.geom.skyWcs import SkyWcs
 from lsst.afw.fits import FitsError
 from lsst.coadd.utils import CoaddDataIdContainer
 from .selectImages import WcsSelectImagesTask, SelectStruct
@@ -238,7 +239,7 @@ class SelectDataIdContainer(pipeBase.DataIdContainer):
         for ref in self.refList:
             try:
                 md = ref.get("calexp_md", immediate=True)
-                wcs = afwImage.makeWcs(md)
+                wcs = SkyWcs(md)
                 data = SelectStruct(dataRef=ref, wcs=wcs, bbox=afwImage.bboxFromMetadata(md))
             except FitsError as e:
                 namespace.log.warn("Unable to construct Wcs from %s" % (ref.dataId))
