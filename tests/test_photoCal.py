@@ -235,7 +235,6 @@ class PhotoCalTest(unittest.TestCase):
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
     pass
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 if __name__ == "__main__":
     lsst.utils.tests.init()
